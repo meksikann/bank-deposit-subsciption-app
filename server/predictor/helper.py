@@ -12,3 +12,6 @@ def df_to_dataset(dataframe, shuffle=True, batch_size=32):
     ds = ds.batch(batch_size)
 
     return ds
+
+def preprocess_data():
+    pass
