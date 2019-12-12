@@ -1,8 +1,11 @@
 import tensorflow as tf
 import pandas as pd
 from tensorflow import feature_column
-from tensorflow.keras.layers import DenseFeatures
+from tensorflow.keras.layers import DenseFeatures, Dense, Dropout
 from sklearn.model_selection import train_test_split
+
+import matplotlib.pyplot as plt
+
 import os
 import helper as helper
 
@@ -13,7 +16,10 @@ assert tf.__version__ == '2.0.0-rc1'
 # load data into memory
 dataset_path = 'data/bank-full.csv'
 dataset = pd.read_csv(os.path.join(os.path.dirname(__file__), dataset_path),
-                      delimiter=';', header=0, encoding='ascii')
+                      delimiter=';', header=0, encoding='ascii', skipinitialspace=True)
+
+# convert Y to INT
+dataset['y'] = [1 if x == 'yes' else 0 for x in dataset['y']]
 
 # find if there are some empty cells
 null_columns = dataset.columns[dataset.isnull().any()]
@@ -41,7 +47,7 @@ print(len(test), 'test set length.')
 # we will wrap the dataframes with tf.data. This will enable us to use feature columns as a bridge to map from the
 # columns in the Pandas dataframe to features used to train the model. If we were working with a very large CSV file
 # (so large that it does not fit into memory), we would use tf.data to read it from disk directly
-batch_size = 5
+batch_size = 32
 train_ds = helper.df_to_dataset(train, batch_size=batch_size)
 test_ds = helper.df_to_dataset(test, batch_size=batch_size, shuffle=False)
 
@@ -59,6 +65,23 @@ def scale_feature(data_set, feature):
         return (x - min_val) / (max_val - min_val)
 
     return minmax
+
+
+def get_model(first_feature_layer):
+    model = tf.keras.Sequential([
+
+        first_feature_layer,
+
+        Dense(16, activation='relu'),
+        Dropout(0.1),
+
+        Dense(32, activation='relu'),
+        Dropout(0.3),
+
+        Dense(1, activation='sigmoid')
+    ])
+
+    return model
 
 
 # create feature columns
@@ -81,9 +104,38 @@ for feature_name in categorical_f:
 # ----------------------------------------------------------------------------------------
 # ***************** Create, train and evaluate model *************************************
 # ----------------------------------------------------------------------------------------
-# TODO: remove example_batch
-example_batch = next(iter(train_ds))[0]
-
 
 feature_layer = DenseFeatures(feature_columns)
-print(feature_layer(example_batch).numpy())
+
+model = get_model(feature_layer)
+
+model.compile(
+    optimizer='adam',
+    loss='binary_crossentropy',
+    metrics=['accuracy']
+)
+
+EPOCHS = 10
+fit_history = model.fit(
+    train_ds,
+    verbose=1,
+    epochs=EPOCHS,
+    validation_data=test_ds
+)
+
+# ----------------------------------------------------------------------------------------
+# ***************** Plot results**********************************************************
+# ----------------------------------------------------------------------------------------
+plt.title('Accuracy')
+plt.plot(fit_history.history['accuracy'], color='blue', label='Train')
+plt.plot(fit_history.history['val_accuracy'], color='orange', label='Val')
+plt.legend()
+
+_ = plt.figure()
+
+plt.plot(fit_history.history['loss'], color='blue', label='Train')
+plt.plot(fit_history.history['val_loss'], color='orange', label='Val')
+plt.title('Loss')
+plt.legend()
+
+plt.show()
