@@ -16,6 +16,7 @@ export default class Deposit extends React.Component {
         };
 
         this.predict = this.predict.bind(this);
+        this.addUser = this.addUser.bind(this);
     }
 
     async componentDidMount() {
@@ -33,11 +34,18 @@ export default class Deposit extends React.Component {
         })
     }
 
+    addUser(event) {
+        event.preventDefault();
+        const data = new FormData(event.target);
+
+        console.log(data.get('age'));
+    }
+
     render() {
         const {users, runningQuery} = this.state;
         return (
             <div className='app-container'>
-                <UserForm/>
+                <UserForm handleSubmit={this.addUser}/>
                 <div style={{margin: '20px'}}>
                     <Users users={users}/>
                     <Button
