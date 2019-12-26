@@ -34,8 +34,10 @@ export default class AppWrapper extends React.Component {
       disable: true
     });
     const {text, rows} = this.state;
+    // const backendUrl = 'http://c9d25618.ngrok.io/sentiment';
+    const backendUrl = 'http://localhost:8282/sentiment';
 
-    const response = await axios.get('http://localhost:8282/sentiment', {params: {text}});
+    const response = await axios.get(backendUrl, {params: {text}});
     console.log('Result:', response);
     let emoji = getEmojiVal(response.data.score);
 

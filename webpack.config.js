@@ -94,6 +94,11 @@ const devSettings = {
   devServer: {
     historyApiFallback: true,
     quiet: false,
+    host: '0.0.0.0',//your ip address
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+    }
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),

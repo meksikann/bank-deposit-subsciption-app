@@ -60,6 +60,7 @@
     "jsx-loader": "^0.13.2",
     "lodash": "^4.17.15",
     "mini-css-extract-plugin": "^0.8.0",
+    "ngrock-webpack-plugin": "0.0.2",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "prop-types": "^15.5.10",
     "react-test-renderer": "^16.11.0",
