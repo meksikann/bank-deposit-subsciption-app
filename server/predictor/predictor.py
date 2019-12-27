@@ -1,20 +1,27 @@
 import tensorflow as tf
 import pandas as pd
 from tensorflow import feature_column
-from tensorflow.keras.layers import DenseFeatures, Dense, Dropout
+from tensorflow.keras.layers import DenseFeatures, Dense, Dropout, concatenate
 from sklearn.model_selection import train_test_split
+from tensorflow import keras
 
 import matplotlib.pyplot as plt
-
 import os
-import helper as helper
 
 print('TF version: ', tf.__version__)
 # make sure trainer user right tf version
 assert tf.__version__ == '2.0.0-rc1'
-
+MODEL_NAME = 'model/my_model_v4'
+MODEL_NAME_H5 = 'model/my_model_v4.hdf5'
+MODEL_JSON = 'model/model_config.json'
+MODEL_PATH = os.path.join(os.path.dirname(__file__), MODEL_NAME)
+MODEL_JSON_PATH = os.path.join(os.path.dirname(__file__), MODEL_JSON)
+MODEL_PATH_H5 = os.path.join(os.path.dirname(__file__), MODEL_NAME_H5)
+WEIGHTS_PATH = os.path.join(os.path.dirname(__file__), 'weights/deposit-v2.h5')
 
 def run_train():
+    import helper as helper
+
     # load data into memory
     dataset_path = 'data/bank-full.csv'
     dataset = pd.read_csv(os.path.join(os.path.dirname(__file__), dataset_path),
@@ -113,14 +120,26 @@ def run_train():
         metrics=['accuracy']
     )
 
-    EPOCHS = 25
+    EPOCHS = 1
     fit_history = model.fit(
         train_ds,
         verbose=1,
         epochs=EPOCHS,
         validation_data=test_ds
     )
-    # model.save_weights('weights/deposit-1v.h5')
+    print('Save all model data')
+    # model.save(MODEL_PATH, save_format='tf')
+    model.save(MODEL_PATH_H5)
+    # tf.saved_model.save(model, MODEL_PATH)
+    # model.save_weights(WEIGHTS_PATH)
+
+
+    # json_config = model.to_json()
+    #
+    # # save model configs and and arch
+    # with open(MODEL_JSON_PATH, 'w') as json_file:
+    #     json_file.write(json_config)
+    # model.save_weights(WEIGHTS_PATH)
 
     # ----------------------------------------------------------------------------------------
     # ***************** Plot results**********************************************************
@@ -138,6 +157,57 @@ def run_train():
     plt.legend()
 
     plt.show()
+
+
+def channel_zeropad(x, channel_axis=3):
+    '''
+    Zero-padding for channle dimensions.
+    Note that padded channles are added like (Batch, H, W, 2/x + x + 2/x).
+    '''
+    shape = list(x.shape)
+    y = K.zeros_like(x)
+
+    if channel_axis == 3:
+        y = y[:, :, :, :shape[channel_axis] // 2]
+    else:
+        y = y[:, :shape[channel_axis] // 2, :, :]
+
+    return concatenate([y, x, y], channel_axis)
+
+
+
+def channel_zeropad_output(input_shape, channel_axis=3):
+    '''
+    Function for setting a channel dimension for zero padding.
+    '''
+    shape = list(input_shape)
+    shape[channel_axis] *= 2
+
+    return tuple(shape)
+
+
+
+
+def predict_users(data):
+    import predictor.helper as helper
+
+
+    print('load model....')
+
+    users_df = helper.preprocess_data_to_df(data['users'])
+
+    # with open(MODEL_JSON_PATH) as json_file:
+    #     json_config = json_file.read()
+    # model = tf.keras.models.model_from_json(json_config)
+    # model.load_weights(WEIGHTS_PATH)
+
+    model = keras.models.load_model(MODEL_PATH_H5)
+    print('Model loaded....')
+
+    model.summary()
+    pred = model.predict(users_df)
+    print(pred)
+    return []
 
 
 # run only as script

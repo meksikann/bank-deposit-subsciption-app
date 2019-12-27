@@ -9,7 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
 const columnNames = ["age", "job", "marital", "education", "default", "balance", "housing", "loan", "contact", "day",
-        "month", "duration", "campaign", "pdays", "previous", "poutcome", "subscription"];
+        "month", "duration", "campaign", "pdays", "previous", "poutcome", "predicted", "actual_subscription"];
 
 const renderItems = (items, names) => {
     return (

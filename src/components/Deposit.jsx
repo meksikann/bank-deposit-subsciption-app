@@ -26,11 +26,17 @@ export default class Deposit extends React.Component {
         })
     }
 
-    predict() {
+    async predict() {
         const {users} = this.state;
         console.log(users);
         this.setState({
             runningQuery: true
+        });
+        const res = await axios.post(`${config.endpoint}predict`, {users});
+        console.log('Predicted:', res.data);
+        this.setState({
+            users: res.data.users,
+            runningQuery: false
         })
     }
 
@@ -39,6 +45,7 @@ export default class Deposit extends React.Component {
         const data = new FormData(event.target);
 
         console.log(data.get('age'));
+    //    TODO: add user to 'users' table
     }
 
     render() {

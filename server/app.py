@@ -1,8 +1,9 @@
 '''server/app.py - main api app declaration'''
-from flask import Flask, jsonify, send_from_directory
+from flask import Flask, jsonify, send_from_directory, request
 from flask_cors import CORS
 import os
 import csv
+from predictor.predictor import predict_users
 
 '''Main wrapper for app creation'''
 app = Flask(__name__, static_folder='../build')
@@ -44,13 +45,23 @@ def items():
                     "campaign": int(row[12]),
                     "pdays": int(row[13]),
                     "previous": int(row[14]),
-                    "poutcome": row[15]
+                    "poutcome": row[15],
+                    "actual_subscription": row[16]
                 })
                 line_count += 1
             else:
                 break
 
     return jsonify(users)
+
+
+@app.route('/api/predict', methods=['POST'])
+def predict():
+    data = request.get_json()
+
+    users = predict_users(data)
+    return jsonify({users: []})
+
 
 
 ##

@@ -1,0 +1,298 @@
+backend: tensorflow
+class_name: Sequential
+config:
+  build_input_shape: !!python/tuple
+  - null
+  layers:
+  - class_name: DenseFeatures
+    config:
+      dtype: float32
+      feature_columns:
+      - class_name: NumericColumn
+        config:
+          default_value: null
+          dtype: float32
+          key: age
+          normalizer_fn: minmax
+          shape: &id001 !!python/tuple
+          - 1
+      - class_name: BucketizedColumn
+        config:
+          boundaries: !!python/tuple
+          - 18
+          - 25
+          - 30
+          - 35
+          - 40
+          - 45
+          - 50
+          - 55
+          - 60
+          - 65
+          - 70
+          - 75
+          - 80
+          source_column:
+            class_name: NumericColumn
+            config:
+              default_value: null
+              dtype: float32
+              key: age
+              normalizer_fn: null
+              shape: *id001
+      - class_name: NumericColumn
+        config:
+          default_value: null
+          dtype: float32
+          key: balance
+          normalizer_fn: minmax
+          shape: *id001
+      - class_name: NumericColumn
+        config:
+          default_value: null
+          dtype: float32
+          key: campaign
+          normalizer_fn: minmax
+          shape: *id001
+      - class_name: IndicatorColumn
+        config:
+          categorical_column:
+            class_name: VocabularyListCategoricalColumn
+            config:
+              default_value: -1
+              dtype: string
+              key: contact
+              num_oov_buckets: 0
+              vocabulary_list: !!python/tuple
+              - unknown
+              - cellular
+              - telephone
+      - class_name: NumericColumn
+        config:
+          default_value: null
+          dtype: float32
+          key: day
+          normalizer_fn: minmax
+          shape: *id001
+      - class_name: IndicatorColumn
+        config:
+          categorical_column:
+            class_name: VocabularyListCategoricalColumn
+            config:
+              default_value: -1
+              dtype: string
+              key: default
+              num_oov_buckets: 0
+              vocabulary_list: !!python/tuple
+              - 'no'
+              - 'yes'
+      - class_name: NumericColumn
+        config:
+          default_value: null
+          dtype: float32
+          key: duration
+          normalizer_fn: minmax
+          shape: *id001
+      - class_name: IndicatorColumn
+        config:
+          categorical_column:
+            class_name: VocabularyListCategoricalColumn
+            config:
+              default_value: -1
+              dtype: string
+              key: education
+              num_oov_buckets: 0
+              vocabulary_list: !!python/tuple
+              - tertiary
+              - secondary
+              - unknown
+              - primary
+      - class_name: IndicatorColumn
+        config:
+          categorical_column:
+            class_name: VocabularyListCategoricalColumn
+            config:
+              default_value: -1
+              dtype: string
+              key: housing
+              num_oov_buckets: 0
+              vocabulary_list: !!python/tuple
+              - 'yes'
+              - 'no'
+      - class_name: IndicatorColumn
+        config:
+          categorical_column:
+            class_name: VocabularyListCategoricalColumn
+            config:
+              default_value: -1
+              dtype: string
+              key: job
+              num_oov_buckets: 0
+              vocabulary_list: !!python/tuple
+              - management
+              - technician
+              - entrepreneur
+              - blue-collar
+              - unknown
+              - retired
+              - admin.
+              - services
+              - self-employed
+              - unemployed
+              - housemaid
+              - student
+      - class_name: IndicatorColumn
+        config:
+          categorical_column:
+            class_name: VocabularyListCategoricalColumn
+            config:
+              default_value: -1
+              dtype: string
+              key: loan
+              num_oov_buckets: 0
+              vocabulary_list: !!python/tuple
+              - 'no'
+              - 'yes'
+      - class_name: IndicatorColumn
+        config:
+          categorical_column:
+            class_name: VocabularyListCategoricalColumn
+            config:
+              default_value: -1
+              dtype: string
+              key: marital
+              num_oov_buckets: 0
+              vocabulary_list: !!python/tuple
+              - married
+              - single
+              - divorced
+      - class_name: IndicatorColumn
+        config:
+          categorical_column:
+            class_name: VocabularyListCategoricalColumn
+            config:
+              default_value: -1
+              dtype: string
+              key: month
+              num_oov_buckets: 0
+              vocabulary_list: !!python/tuple
+              - may
+              - jun
+              - jul
+              - aug
+              - oct
+              - nov
+              - dec
+              - jan
+              - feb
+              - mar
+              - apr
+              - sep
+      - class_name: NumericColumn
+        config:
+          default_value: null
+          dtype: float32
+          key: pdays
+          normalizer_fn: minmax
+          shape: *id001
+      - class_name: IndicatorColumn
+        config:
+          categorical_column:
+            class_name: VocabularyListCategoricalColumn
+            config:
+              default_value: -1
+              dtype: string
+              key: poutcome
+              num_oov_buckets: 0
+              vocabulary_list: !!python/tuple
+              - unknown
+              - failure
+              - other
+              - success
+      - class_name: NumericColumn
+        config:
+          default_value: null
+          dtype: float32
+          key: previous
+          normalizer_fn: minmax
+          shape: *id001
+      name: dense_features
+      trainable: true
+  - class_name: Dense
+    config:
+      activation: relu
+      activity_regularizer: null
+      bias_constraint: null
+      bias_initializer:
+        class_name: Zeros
+        config: {}
+      bias_regularizer: null
+      dtype: float32
+      kernel_constraint: null
+      kernel_initializer:
+        class_name: GlorotUniform
+        config:
+          seed: null
+      kernel_regularizer: null
+      name: dense
+      trainable: true
+      units: 16
+      use_bias: true
+  - class_name: Dropout
+    config:
+      dtype: float32
+      name: dropout
+      noise_shape: null
+      rate: 0.2
+      seed: null
+      trainable: true
+  - class_name: Dense
+    config:
+      activation: relu
+      activity_regularizer: null
+      bias_constraint: null
+      bias_initializer:
+        class_name: Zeros
+        config: {}
+      bias_regularizer: null
+      dtype: float32
+      kernel_constraint: null
+      kernel_initializer:
+        class_name: GlorotUniform
+        config:
+          seed: null
+      kernel_regularizer: null
+      name: dense_1
+      trainable: true
+      units: 16
+      use_bias: true
+  - class_name: Dropout
+    config:
+      dtype: float32
+      name: dropout_1
+      noise_shape: null
+      rate: 0.3
+      seed: null
+      trainable: true
+  - class_name: Dense
+    config:
+      activation: sigmoid
+      activity_regularizer: null
+      bias_constraint: null
+      bias_initializer:
+        class_name: Zeros
+        config: {}
+      bias_regularizer: null
+      dtype: float32
+      kernel_constraint: null
+      kernel_initializer:
+        class_name: GlorotUniform
+        config:
+          seed: null
+      kernel_regularizer: null
+      name: dense_2
+      trainable: true
+      units: 1
+      use_bias: true
+  name: sequential
+keras_version: 2.2.4-tf
