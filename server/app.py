@@ -28,7 +28,7 @@ def items():
         for row in csv_reader:
             if line_count == 0:
                 line_count += 1
-            elif line_count < 14:
+            elif line_count < 24:
                 users.append({
                     "age": int(row[0]),
                     "job": row[1],
@@ -60,7 +60,8 @@ def predict():
     data = request.get_json()
 
     users = predict_users(data)
-    return jsonify({users: []})
+
+    return jsonify(users)
 
 
 

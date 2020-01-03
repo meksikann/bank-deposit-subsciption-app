@@ -28,14 +28,14 @@ export default class Deposit extends React.Component {
 
     async predict() {
         const {users} = this.state;
-        console.log(users);
+
         this.setState({
             runningQuery: true
         });
         const res = await axios.post(`${config.endpoint}predict`, {users});
-        console.log('Predicted:', res.data);
+
         this.setState({
-            users: res.data.users,
+            users: res.data,
             runningQuery: false
         })
     }

@@ -19,8 +19,10 @@ const renderItems = (items, names) => {
                     <TableCell>{i}</TableCell>
                     {names.map(name => {
                         let styles = {};
-                        if(name === 'subscription') {
+                        if(name === 'predicted') {
                            styles.color = 'red'
+                        } else if(name === 'actual_subscription') {
+                            styles.color = 'blue'
                         }
 
                         return (
@@ -35,9 +37,18 @@ const renderItems = (items, names) => {
 };
 
 const renderHeader = (names) => {
-    return names.map(name => (
-        <TableCell key={name}><h4 style={{textTransform: 'capitalize'}}>{name}</h4></TableCell>
-    ));
+    return names.map(name => {
+            let styles = {};
+            if(name === 'predicted') {
+                 styles.color = 'red'
+            } else if(name === 'actual_subscription') {
+                styles.color = 'blue'
+            }
+            return (
+                <TableCell key={name} style={styles}><h4 style={{textTransform: 'capitalize'}}>{name}</h4></TableCell>
+            )
+        }
+    );
 };
 
 const Users = (props) => (

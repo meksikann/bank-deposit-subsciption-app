@@ -15,9 +15,10 @@ def df_to_dataset(dataframe, shuffle=True, batch_size=32):
     return ds
 
 
-def preprocess_data_to_df(data):
+def preprocess_data_to_df(data, batch_size=32):
     print('Start data preprocessing  -------------->>>>>>>')
     df = pd.DataFrame(data)
-    df = tf.data.Dataset.from_tensor_slices(dict(df))
+    df = tf.data.Dataset.from_tensor_slices((dict(df)))
+    df = df.batch(batch_size)
 
     return df
