@@ -34,8 +34,8 @@ export default class AppWrapper extends React.Component {
       disable: true
     });
     const {text, rows} = this.state;
-    // const backendUrl = 'http://c9d25618.ngrok.io/sentiment';
-    const backendUrl = 'http://localhost:8282/sentiment';
+    const backendUrl = 'http://49101014.ngrok.io/sentiment';
+    // const backendUrl = 'http://localhost:8282/sentiment';
 
     const response = await axios.get(backendUrl, {params: {text}});
     console.log('Result:', response);
