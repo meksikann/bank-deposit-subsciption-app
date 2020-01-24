@@ -28,7 +28,7 @@ def items():
         for row in csv_reader:
             if line_count == 0:
                 line_count += 1
-            elif line_count < 24:
+            elif line_count < 16:
                 users.append({
                     "age": int(row[0]),
                     "job": row[1],

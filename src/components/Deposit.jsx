@@ -52,7 +52,7 @@ export default class Deposit extends React.Component {
         const {users, runningQuery} = this.state;
         return (
             <div className='app-container'>
-                <UserForm handleSubmit={this.addUser}/>
+                {/*<UserForm handleSubmit={this.addUser}/>*/}
                 <div style={{margin: '20px'}}>
                     <Users users={users}/>
                     <Button
